@@ -1,10 +1,26 @@
 import Link from "next/link";
 
 export default async function HomeSectionProjects() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/projects?status=published`
-  );
-  const projects = await res.json();
+  let projects = [];
+
+  try {
+    const res = await fetch(`/api/projects?status=published`, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+
+    if (!res.ok) {
+      // console.error(`API Error: ${res.status} ${res.statusText}`);
+      // Return empty projects array if API fails
+      return renderProjectsSection(projects);
+    }
+
+    const data = await res.json();
+    projects = Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    // Return empty projects array if fetch fails
+    return renderProjectsSection(projects);
+  }
 
   const projectStatus = (status) => {
     return status === false ? (
@@ -26,6 +42,10 @@ export default async function HomeSectionProjects() {
     );
   };
 
+  return renderProjectsSection(projects);
+}
+
+function renderProjectsSection(projects) {
   return (
     <section
       id="projects"
@@ -58,71 +78,79 @@ export default async function HomeSectionProjects() {
 
         {/* Projects Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-          {projects.map((project) => (
-            <div
-              key={project._id}
-              className="group relative bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 hover:bg-gray-800/50 hover:border-gray-700 transition-all duration-500 hover:transform hover:-translate-y-2 overflow-hidden"
-            >
-              {/* Hover glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-
-              {/* Status Badge */}
-              {projectStatus(project.completed)}
-
-              {/* Project Content */}
-              <div className="relative z-10 space-y-6">
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">
-                    {project.title}
-                  </h3>
-
-                  <p className="text-gray-400 leading-relaxed line-clamp-3 group-hover:text-gray-300 transition-colors duration-300">
-                    {project.excerpt}
-                  </p>
-                </div>
-
-                {/* Tech stack */}
-                {project.technologies && project.technologies.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-gray-800/50 text-gray-300 text-xs rounded-full border border-gray-700"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <div className="pt-4">
-                  <Link
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold rounded-lg hover:from-emerald-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-emerald-500/25"
-                    href={`/projects/${project.slug}`}
-                  >
-                    View Project
-                    <svg
-                      className="w-4 h-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                      />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Bottom accent line */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-b-2xl"></div>
+          {projects.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-400 text-lg">
+                No projects available at the moment.
+              </p>
             </div>
-          ))}
+          ) : (
+            projects.map((project) => (
+              <div
+                key={project._id}
+                className="group relative bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 hover:bg-gray-800/50 hover:border-gray-700 transition-all duration-500 hover:transform hover:-translate-y-2 overflow-hidden"
+              >
+                {/* Hover glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+
+                {/* Status Badge */}
+                <ProjectStatus status={project.completed} />
+
+                {/* Project Content */}
+                <div className="relative z-10 space-y-6">
+                  <div className="space-y-4">
+                    <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">
+                      {project.title}
+                    </h3>
+
+                    <p className="text-gray-400 leading-relaxed line-clamp-3 group-hover:text-gray-300 transition-colors duration-300">
+                      {project.excerpt}
+                    </p>
+                  </div>
+
+                  {/* Tech stack */}
+                  {project.technologies && project.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {project.technologies.map((tech, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-gray-800/50 text-gray-300 text-xs rounded-full border border-gray-700"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="pt-4">
+                    <Link
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold rounded-lg hover:from-emerald-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-emerald-500/25"
+                      href={`/projects/${project.slug}`}
+                    >
+                      View Project
+                      <svg
+                        className="w-4 h-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                        />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Bottom accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-b-2xl"></div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Call to Action */}
