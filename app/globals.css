@@ -1,28 +1,70 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-    themes: business --default;
+  themes: business --default;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 :root {
-    --background: #ffffff;
-    --foreground: #171717;
+  --background: #ffffff;
+  --foreground: #171717;
 }
 
 @theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --font-sans: var(--font-inter);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
 }
 
 body {
-    background: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-inter);
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter);
+}
+
+.project-content {
+  p {
+    @apply mb-4;
+  }
+  h2 {
+    @apply text-4xl font-normal mb-4;
+  }
+  h3 {
+    @apply text-2xl font-normal mb-4;
+  }
+  h4 {
+    @apply text-lg font-normal mb-4;
+  }
+  h5 {
+    @apply text-base font-bold mb-4;
+  }
+}
+
+.ql-align-center {
+  @apply text-center;
+}
+.ql-align-right {
+  @apply text-right;
+}
+.ql-align-justify {
+  @apply text-justify;
+}
+
+#image-modal {
+  .swiper-pagination-bullet {
+    @apply bg-success;
+
+    &:not(.swiper-pagination-bullet-active) {
+      @apply opacity-50;
+    }
+  }
 }
