@@ -49,6 +49,8 @@ export async function PUT(req, { params }) {
             status = "draft",
             completed = false,
             excerpt = "",
+            featuredImage = "",
+            gallery = [],
         } = data;
 
         const techArray = typeof technologies === "string"
@@ -67,6 +69,8 @@ export async function PUT(req, { params }) {
                 status,
                 completed,
                 excerpt,
+                featuredImage,
+                gallery,
             },
             { new: true, runValidators: true }
         );

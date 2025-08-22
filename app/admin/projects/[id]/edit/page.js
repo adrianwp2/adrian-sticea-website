@@ -21,6 +21,7 @@ const modules = {
         [{ 'header': [1, 2, 3, false] }],
         ['bold', 'italic', 'underline'],
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'align': [] }],
         ['clean']
     ],
 };
@@ -28,7 +29,8 @@ const modules = {
 const formats = [
     'header',
     'bold', 'italic', 'underline',
-    'list', 'bullet'
+    'list', 'bullet',
+    'align'
 ];
 
 export default function EditProjectPage() {
