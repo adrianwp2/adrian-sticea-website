@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default async function HomeSectionProjects() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/projects?status=published`
@@ -94,7 +96,7 @@ export default async function HomeSectionProjects() {
                 )}
 
                 <div className="pt-4">
-                  <a
+                  <Link
                     className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-semibold rounded-lg hover:from-emerald-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-emerald-500/25"
                     href={`/projects/${project.slug}`}
                   >
@@ -113,7 +115,7 @@ export default async function HomeSectionProjects() {
                         d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
                       />
                     </svg>
-                  </a>
+                  </Link>
                 </div>
               </div>
 
