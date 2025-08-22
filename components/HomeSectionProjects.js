@@ -1,10 +1,13 @@
 import Link from "next/link";
 
+// Project status component - defined outside so it can be used by both functions
+
 export default async function HomeSectionProjects() {
   let projects = [];
 
   try {
-    const res = await fetch(`/api/projects?status=published`, {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const res = await fetch(`${baseUrl}/api/projects?status=published`, {
       next: { revalidate: 3600 }, // Cache for 1 hour
     });
 
@@ -22,6 +25,10 @@ export default async function HomeSectionProjects() {
     return renderProjectsSection(projects);
   }
 
+  return renderProjectsSection(projects);
+}
+
+function renderProjectsSection(projects) {
   const projectStatus = (status) => {
     return status === false ? (
       <div className="absolute top-4 right-4 px-3 py-1 bg-yellow-500/20 border border-yellow-500/30 rounded-full">
@@ -42,10 +49,6 @@ export default async function HomeSectionProjects() {
     );
   };
 
-  return renderProjectsSection(projects);
-}
-
-function renderProjectsSection(projects) {
   return (
     <section
       id="projects"
@@ -94,7 +97,7 @@ function renderProjectsSection(projects) {
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
 
                 {/* Status Badge */}
-                <ProjectStatus status={project.completed} />
+                {projectStatus(project.completed)}
 
                 {/* Project Content */}
                 <div className="relative z-10 space-y-6">
