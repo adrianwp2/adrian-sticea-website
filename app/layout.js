@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/react";
 
 const InterSans = Inter({
   variable: "--font-inter",
@@ -21,6 +22,7 @@ export default function RootLayout({ children }) {
         {children}
         <Toaster position="	top-center" />
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
