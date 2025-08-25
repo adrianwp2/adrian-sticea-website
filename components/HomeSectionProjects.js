@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 // Project status component - defined outside so it can be used by both functions
 
@@ -124,6 +125,16 @@ function renderProjectsSection(projects) {
                       ))}
                     </div>
                   )}
+
+                  {/* Project image */}
+                  <div className="relative w-full h-52 rounded-lg overflow-hidden">
+                    <Image
+                      src={`/${project.featuredImage}`}
+                      alt={project.title}
+                      fill
+                      className="object-cover object-top"
+                    />
+                  </div>
 
                   <div className="pt-4">
                     <Link
