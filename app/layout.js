@@ -19,7 +19,7 @@ export const metadata = {
       "Experienced developer who transforms ideas into powerful digital solutions. From custom websites to SaaS applications, I deliver results that drive business growth.",
     images: [
       {
-        url: "/images/me.webp", // Change this to your preferred image
+        url: "https://www.adriansticea.com/images/me.webp", // Change this to your preferred image
         width: 1200,
         height: 630,
         alt: "Full-Stack Developer",
@@ -32,7 +32,7 @@ export const metadata = {
     title: "Full-Stack Developer Ready to Build",
     description:
       "Experienced developer who transforms ideas into powerful digital solutions. From custom websites to SaaS applications, I deliver results that drive business growth.",
-    images: ["/images/me.webp"], // Change this to your preferred image
+    images: ["https://www.adriansticea.com/images/me.webp"], // Change this to your preferred image
   },
 };
 
